@@ -326,8 +326,13 @@ public class MiLista implements ListInterface {
         return iterador;
     }
 
-    // Número que se usa para comparar al ordenar (por ahora solo enteros)
+    // Número que se usa para comparar al ordenar:
+    // si es una carta se usa su número (1 a 13), si es un entero se usa el mismo entero.
     private int valorParaOrdenar(Object dato) {
+        if (dato instanceof Carta) {
+            Carta carta = (Carta) dato;
+            return carta.getNumero();
+        }
         if (dato instanceof Integer) {
             return (Integer) dato;
         }
