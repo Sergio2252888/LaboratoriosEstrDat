@@ -56,4 +56,9 @@ public interface ListInterface {
 
     public MiLista sortList();
 
+    /*
+    operación agregada para la práctica de la baraja
+     */
+    public void shuffle();
+
 }

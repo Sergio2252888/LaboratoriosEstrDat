@@ -272,7 +272,66 @@ public class MiLista implements ListInterface {
 
     @Override
     public MiLista sortList() {
-        return null;
+        // 1er paso: copiar los datos en una lista nueva (la original no cambia)
+        MiLista ordenada = subList(this.cabeza, null);
+        int n = ordenada.getSize();
+
+        // 2do paso: Bubble Sort sobre los nodos.
+        // Bucle externo: se repite n-1 veces.
+        for (int i = 0; i < n - 1; i++) {
+            ListNode actual = ordenada.cabeza;
+            // Bucle interno: compara cada nodo con su siguiente y,
+            // si el primero es mayor, intercambia sus datos.
+            // En cada vuelta recorre un valor menos.
+            for (int j = 0; j < n - 1 - i; j++) {
+                if (valorParaOrdenar(actual.dato) > valorParaOrdenar(actual.siguiente.dato)) {
+                    Object temporal = actual.dato;
+                    actual.dato = actual.siguiente.dato;
+                    actual.siguiente.dato = temporal;
+                }
+                actual = actual.siguiente;
+            }
+        }
+        return ordenada;
+    }
+
+    @Override
+    public void shuffle() {
+        // Para cada posición se escoge otra posición al azar
+        // y se intercambian los datos de esos dos nodos.
+        int n = getSize();
+        ListNode actual = this.cabeza;
+        while (actual != null) {
+            int posicionAzar = (int) (Math.random() * n);
+            ListNode otro = getNode(posicionAzar);
+
+            Object temporal = actual.dato;
+            actual.dato = otro.dato;
+            otro.dato = temporal;
+
+            actual = actual.siguiente;
+        }
+    }
+
+    // ===================== Métodos auxiliares =====================
+
+    // Devuelve el nodo que está en la posición indicada (la cabeza es la posición 0)
+    public ListNode getNode(int posicion) {
+        ListNode iterador = this.cabeza;
+        int contador = 0;
+        while (iterador != null && contador < posicion) {
+            iterador = iterador.siguiente;
+            contador = contador + 1;
+        }
+        return iterador;
+    }
+
+    // Número que se usa para comparar al ordenar (por ahora solo enteros)
+    private int valorParaOrdenar(Object dato) {
+        if (dato instanceof Integer) {
+            return (Integer) dato;
+        }
+        return 0;
     }
 
     @Override
