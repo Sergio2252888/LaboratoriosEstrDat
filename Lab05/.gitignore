@@ -1,0 +1,14 @@
+# Salida de compilación
+out/
+*.class
+
+# Archivos personales de IntelliJ
+.idea/workspace.xml
+.idea/usage.statistics.xml
+.idea/shelf/
+.idea/tasks.xml
+.idea/dictionaries/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
