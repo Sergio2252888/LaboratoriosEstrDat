@@ -172,47 +172,102 @@ public class MiLista implements ListInterface {
 
     @Override
     public boolean contains(Object object) {
-        return false;
+        return search(object) != null;
     }
 
     @Override
     public Iterator<ListNode> iterator() {
-        return null;
+        // Devuelve un objeto que permite recorrer los nodos uno por uno
+        return new MiIterador(this.cabeza);
     }
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        // Copia los datos de la lista en un arreglo del mismo tamaño
+        Object[] arreglo = new Object[getSize()];
+        ListNode iterador = this.cabeza;
+        int i = 0;
+        while (iterador != null) {
+            arreglo[i] = iterador.dato;
+            i = i + 1;
+            iterador = iterador.siguiente;
+        }
+        return arreglo;
     }
 
     @Override
     public Object[] toArray(Object[] object) {
-        return new Object[0];
+        // Si el arreglo recibido no alcanza, se crea uno nuevo del tamaño de la lista
+        if (object == null || object.length < getSize()) {
+            object = new Object[getSize()];
+        }
+        ListNode iterador = this.cabeza;
+        int i = 0;
+        while (iterador != null) {
+            object[i] = iterador.dato;
+            i = i + 1;
+            iterador = iterador.siguiente;
+        }
+        return object;
     }
 
     @Override
     public Object getBeforeTo() {
-        return null;
+        // Dato que está antes de la cola (el penúltimo)
+        if (this.cabeza == null || this.cabeza.siguiente == null) {
+            return null;
+        }
+        ListNode iterador = this.cabeza;
+        while (iterador.siguiente.siguiente != null) {
+            iterador = iterador.siguiente;
+        }
+        return iterador.dato;
     }
 
     @Override
     public Object getBeforeTo(ListNode node) {
+        // Dato del nodo que está antes del nodo recibido
+        if (node == null || this.cabeza == null || this.cabeza == node) {
+            return null;
+        }
+        ListNode iterador = this.cabeza;
+        while (iterador.siguiente != null) {
+            if (iterador.siguiente == node) {
+                return iterador.dato;
+            }
+            iterador = iterador.siguiente;
+        }
         return null;
     }
 
     @Override
     public Object getNextTo() {
-        return null;
+        // Dato que está después de la cabeza (el segundo)
+        return getNextTo(this.cabeza);
     }
 
     @Override
     public Object getNextTo(ListNode node) {
-        return null;
+        // Dato del nodo que está después del nodo recibido
+        if (node == null || node.siguiente == null) {
+            return null;
+        }
+        return node.siguiente.dato;
     }
 
     @Override
     public MiLista subList(ListNode from, ListNode to) {
-        return null;
+        // Crea una lista nueva copiando los datos desde 'from' hasta 'to' (incluidos)
+        MiLista nuevaLista = new MiLista();
+        ListNode iterador = from;
+        while (iterador != null) {
+            nuevaLista.insertTail(iterador.dato);
+            if (iterador == to) {
+                break;
+            }
+            iterador = iterador.siguiente;
+        }
+        return nuevaLista;
     }
 
     @Override
@@ -222,8 +277,17 @@ public class MiLista implements ListInterface {
 
     @Override
     public String toString() {
-        return "MiLista{" +
-                "cabeza=" + cabeza +
-                '}';
+        // Recorre la lista y arma un texto como: [A♥, 2♥, 3♥]
+        String texto = "[";
+        ListNode iterador = this.cabeza;
+        while (iterador != null) {
+            texto = texto + iterador.dato;
+            if (iterador.siguiente != null) {
+                texto = texto + ", ";
+            }
+            iterador = iterador.siguiente;
+        }
+        texto = texto + "]";
+        return texto;
     }
 }
