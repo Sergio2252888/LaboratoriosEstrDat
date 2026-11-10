@@ -1,20 +1,24 @@
 import java.util.Iterator;
 
-public class MiLista implements ListInterface{
+public class MiLista implements ListInterface {
     ListNode cabeza;
+
+    // ===================== Operaciones esenciales =====================
 
     @Override
     public boolean isEmpty() {
-        return false;
+        // La lista está vacía cuando no tiene cabeza
+        return this.cabeza == null;
     }
 
     @Override
     public int getSize() {
+        // Se recorre la lista desde la cabeza hasta null contando los nodos
+        int contador = 0;
         ListNode iterador = this.cabeza;
-        int contador = 1;
-        while (iterador.siguiente != null){
-            iterador = iterador.siguiente;
+        while (iterador != null) {
             contador = contador + 1;
+            iterador = iterador.siguiente;
         }
         return contador;
     }
@@ -22,42 +26,80 @@ public class MiLista implements ListInterface{
     @Override
     public void clear() {
         this.cabeza = null;
-
     }
 
     @Override
     public Object getHead() {
-        return null;
+        if (this.cabeza == null) {
+            return null;
+        }
+        return this.cabeza.dato;
     }
 
     @Override
     public Object getTail() {
-        return null;
+        if (this.cabeza == null) {
+            return null;
+        }
+        // Se avanza hasta el último nodo (el que no tiene siguiente)
+        ListNode iterador = this.cabeza;
+        while (iterador.siguiente != null) {
+            iterador = iterador.siguiente;
+        }
+        return iterador.dato;
     }
 
     @Override
     public Object get(ListNode node) {
-        return null;
+        if (node == null) {
+            return null;
+        }
+        return node.dato;
     }
 
     @Override
     public Object search(Object object) {
+        // Se recorre la lista comparando el dato de cada nodo con el buscado.
+        // Si lo encuentra devuelve el nodo, si no devuelve null.
+        ListNode iterador = this.cabeza;
+        while (iterador != null) {
+            if (iterador.dato.equals(object)) {
+                return iterador;
+            }
+            iterador = iterador.siguiente;
+        }
         return null;
     }
 
     @Override
     public boolean add(Object object) {
-        return false;
+        // Agregar es lo mismo que insertar al final
+        return insertTail(object);
     }
 
     @Override
     public boolean insert(ListNode node, Object object) {
-        return false;
+        // Inserta un nuevo nodo después del nodo dado como referencia
+        if (node == null) {
+            return false;
+        }
+        // 1er paso: crear el nuevo nodo
+        ListNode nuevo = new ListNode(object);
+        // 2do paso: el nuevo nodo apunta al siguiente del nodo de referencia
+        nuevo.siguiente = node.siguiente;
+        // 3er paso: el nodo de referencia apunta al nuevo nodo
+        node.siguiente = nuevo;
+        return true;
     }
 
     @Override
     public boolean insert(Object ob, Object object) {
-        return false;
+        // Busca el nodo cuya información es 'ob' e inserta después de él
+        ListNode encontrado = (ListNode) search(ob);
+        if (encontrado == null) {
+            return false; // el nodo de referencia no está en la lista
+        }
+        return insert(encontrado, object);
     }
 
     @Override
@@ -96,13 +138,37 @@ public class MiLista implements ListInterface{
 
     @Override
     public boolean set(ListNode node, Object object) {
-        return false;
+        // Cambia la información guardada en el nodo
+        if (node == null) {
+            return false;
+        }
+        node.dato = object;
+        return true;
     }
 
     @Override
     public boolean remove(ListNode node) {
-        return false;
+        if (node == null || this.cabeza == null) {
+            return false;
+        }
+        // Caso 1: el nodo a eliminar es la cabeza
+        if (this.cabeza == node) {
+            this.cabeza = this.cabeza.siguiente;
+            return true;
+        }
+        // Caso 2: se busca el nodo anterior y se conecta con el siguiente del eliminado
+        ListNode iterador = this.cabeza;
+        while (iterador.siguiente != null) {
+            if (iterador.siguiente == node) {
+                iterador.siguiente = node.siguiente;
+                return true;
+            }
+            iterador = iterador.siguiente;
+        }
+        return false; // el nodo no estaba en la lista
     }
+
+    // ===================== Operaciones de expansión =====================
 
     @Override
     public boolean contains(Object object) {
